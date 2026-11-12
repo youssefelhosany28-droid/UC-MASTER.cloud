@@ -1,0 +1,11 @@
+name = "uc-master-api"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+[vars]
+FIREBASE_PROJECT = "uc-master-website"
+ADMIN_EMAIL = "youssefelhosany28@gmail.com"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "uc-master-db"
