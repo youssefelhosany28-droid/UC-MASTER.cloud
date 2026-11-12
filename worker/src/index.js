@@ -80,7 +80,7 @@ export default {
 
       const u = await verifyUser(req, env);
       if (!u) return json({ error: "unauthorized" }, 401);
-      const isAdmin = u.verified && u.email === env.ADMIN_EMAIL.toLowerCase();
+      const isAdmin = u.verified && env.ADMIN_EMAIL.toLowerCase().split(",").map((s) => s.trim()).includes(u.email);
 
       if (path === "/api/me") {
         await db.prepare("INSERT OR IGNORE INTO users(uid) VALUES(?)").bind(u.uid).run();
