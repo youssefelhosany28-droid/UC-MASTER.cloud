@@ -4,7 +4,7 @@ compatibility_date = "2025-01-01"
 
 [vars]
 FIREBASE_PROJECT = "uc-master-website"
-ADMIN_EMAIL = "youssefelhosany28@gmail.com"
+ADMIN_EMAIL = "youssefelhosany28@gmail.com,Mhp08880@gmail.com"
 TG_CHAT = "8252325617"
 [[d1_databases]]
 binding = "DB"
