@@ -1,0 +1,8 @@
+{
+  "appId": "com.ucmaster.app",
+  "appName": "UC MASTER",
+  "webDir": ".",
+  "server": {
+    "androidScheme": "https"
+  }
+}
