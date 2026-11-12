@@ -6,9 +6,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: cloudflare/wrangler-action@v3
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: worker
           wranglerVersion: "4"
+          secrets: |
+            TG_TOKEN
           command: deploy
