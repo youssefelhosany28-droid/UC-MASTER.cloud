@@ -60,7 +60,7 @@ async function ssv(url, env) {
 }
 
 export default {
-  async fetch(req, env) {
+  async fetch(req, env, ctx) {
     if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
     const url = new URL(req.url), db = env.DB, path = url.pathname;
     try {
@@ -100,6 +100,7 @@ export default {
           db.prepare("INSERT INTO orders(uid,email,reward,pubg_id,cost,created_at) SELECT ?,?,?,?,?,? WHERE changes()>0").bind(u.uid, u.email, reward, id, cost, new Date().toISOString()),
         ]);
         if (!r[0].meta.changes) return json({ error: "الكوينات مش كفاية" }, 400);
+        if (env.TG_TOKEN && env.TG_CHAT) ctx.waitUntil(fetch("https://api.telegram.org/bot" + env.TG_TOKEN + "/sendMessage", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ chat_id: env.TG_CHAT, text: "🎮 طلب شحن جديد\n" + reward + "\nPUBG ID: " + id + "\n" + u.email }) }));
         return json({ ok: true });
       }
 
