@@ -1,0 +1,16 @@
+name: Create signing key (run ONCE)
+on: workflow_dispatch
+jobs:
+  key:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate
+        run: |
+          PASS=$(openssl rand -hex 12)
+          keytool -genkeypair -keystore ks.jks -alias ucmaster -keyalg RSA -keysize 2048 -validity 10000 -storepass "$PASS" -keypass "$PASS" -dname "CN=UC MASTER, O=UC MASTER, C=EG"
+          { echo "KEYSTORE_PASSWORD=$PASS"; echo "KEY_ALIAS=ucmaster"; echo "KEYSTORE_BASE64="; base64 -w0 ks.jks; echo; } > keys.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: signing-keys
+          path: keys.txt
+          retention-days: 1
