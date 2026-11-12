@@ -22,6 +22,42 @@ jobs:
           sed -i 's#"webDir": "."#"webDir": "www"#' capacitor.config.json
       - run: npm install
       - run: npx cap add android
+      - name: Generate app icon
+        run: |
+          pip install pillow
+          mkdir -p assets
+          python3 - << 'PY'
+          from PIL import Image, ImageDraw, ImageFont
+          S = 1024
+          def font(size):
+              for p in ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+                        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"]:
+                  try:
+                      return ImageFont.truetype(p, size)
+                  except Exception:
+                      pass
+              return ImageFont.load_default()
+          def coin(d):
+              c = S // 2
+              d.ellipse([c-320, c-320, c+320, c+320], fill=(180, 120, 10, 255))
+              d.ellipse([c-300, c-300, c+300, c+300], fill=(255, 196, 40, 255))
+              d.ellipse([c-250, c-250, c+250, c+250], outline=(190, 130, 15, 255), width=14)
+              d.text((c, c), "UC", font=font(260), fill=(60, 35, 5, 255), anchor="mm")
+          bg = Image.new("RGBA", (S, S))
+          px = bg.load()
+          for y in range(S):
+              for x in range(S):
+                  t = (x + y) / (2 * S)
+                  px[x, y] = (int(15 + 55*t), int(15 + 10*t), int(45 + 90*t), 255)
+          fg = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+          coin(ImageDraw.Draw(fg))
+          full = bg.copy()
+          full.alpha_composite(fg)
+          full.save("assets/icon-only.png")
+          fg.save("assets/icon-foreground.png")
+          bg.save("assets/icon-background.png")
+          PY
+          npx --yes @capacitor/assets generate --android
       - name: AdMob app id
         env:
           ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
