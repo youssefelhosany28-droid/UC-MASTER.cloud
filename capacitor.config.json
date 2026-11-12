@@ -1,0 +1,8 @@
+{
+  "appId": "com.ucmaster.app",
+  "appName": "Prize Master",
+  "webDir": ".",
+  "server": {
+    "androidScheme": "https"
+  }
+}
